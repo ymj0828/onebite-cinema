@@ -1,19 +1,19 @@
-import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
-import style from "./searchable-layout.module.css";
+import { ReactNode, useEffect, useState } from 'react';
 
-export default function SearchableLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+import style from './searchable-layout.module.css';
+import classNames from 'classnames/bind';
+import { useRouter } from 'next/router';
+
+const cx = classNames.bind(style);
+
+export default function SearchableLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const q = router.query.q as string;
 
   useEffect(() => {
-    setSearch(q || "");
+    setSearch(q || '');
   }, [q]);
 
   const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,14 +26,14 @@ export default function SearchableLayout({
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       onSubmit();
     }
   };
 
   return (
     <div>
-      <div className={style.searchbar_container}>
+      <div className={cx('searchbar_container')}>
         <input
           value={search}
           onKeyDown={onKeyDown}

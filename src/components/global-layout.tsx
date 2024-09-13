@@ -1,14 +1,18 @@
-import { ReactNode } from "react";
-import Link from "next/link";
-import style from "./global-layout.module.css";
+import { ReactNode } from 'react';
+
+import style from './global-layout.module.css';
+import classNames from 'classnames/bind';
+import Link from 'next/link';
+
+const cx = classNames.bind(style);
 
 export default function GlobalLayout({ children }: { children: ReactNode }) {
   return (
-    <div className={style.container}>
-      <header className={style.header}>
-        <Link href={"/"}>ONEBITE CINEMA</Link>
+    <div className={cx('container')}>
+      <header className={cx('header')}>
+        <Link href={'/'}>ONEBITE CINEMA</Link>
       </header>
-      <main className={style.main}>{children}</main>
+      <main className={cx('main')}>{children}</main>
     </div>
   );
 }
