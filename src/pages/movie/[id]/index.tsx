@@ -1,21 +1,45 @@
 import style from './[id].module.css';
 import classNames from 'classnames/bind';
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
+import { useRouter } from 'next/router';
 
+import fetchMovies from '@/lib/fetch-movies';
 import fetchOneMovie from '@/lib/fetch-one-movie';
 
 const cx = classNames.bind(style);
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const id = context.params!.id;
-  const movie = await fetchOneMovie(Number(id));
+export const getStaticPaths = async () => {
+  const movies = await fetchMovies();
 
   return {
-    props: { movie },
+    paths: movies.map((movie) => ({
+      params: { id: movie.id.toString() },
+    })),
+    fallback: true,
   };
 };
 
-export default function Page({ movie }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
+  const id = context.params!.id;
+  const movie = await fetchOneMovie(Number(id));
+
+  if (!movie) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      movie,
+    },
+  };
+};
+
+export default function Page({ movie }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  if (router.isFallback) return '로딩중입니다';
   if (!movie) return '문제가 발생했습니다 다시 시도하세요';
 
   const { id, title, subTitle, company, runtime, description, posterImgUrl, releaseDate, genres } =
