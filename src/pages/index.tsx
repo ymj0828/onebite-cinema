@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import style from './index.module.css';
 import classNames from 'classnames/bind';
-import { InferGetServerSidePropsType } from 'next';
+import { InferGetStaticPropsType } from 'next';
 
 import MovieItem from '@/components/movie-item';
 import SearchableLayout from '@/components/searchable-layout';
@@ -12,7 +12,7 @@ import fetchRandomMovie from '@/lib/fetch-random-movie';
 
 const cx = classNames.bind(style);
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const [allMovies, recoMovies] = await Promise.all([fetchMovies(), fetchRandomMovie()]);
 
   return {
@@ -26,7 +26,7 @@ export const getServerSideProps = async () => {
 export default function Home({
   allMovies,
   recoMovies,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className={cx('container')}>
       <section>
